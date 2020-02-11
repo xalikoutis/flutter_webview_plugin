@@ -135,6 +135,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
 
     WKWebViewConfiguration* configuration = [[WKWebViewConfiguration alloc] init];
     configuration.userContentController = userContentController;
+    configuration.allowsInlineMediaPlayback = true;
     self.webview = [[WKWebView alloc] initWithFrame:rc configuration:configuration];
     self.webview.UIDelegate = self;
     self.webview.navigationDelegate = self;
