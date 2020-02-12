@@ -335,6 +335,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
 }
 - (void)stopLoading {
     if (self.webview != nil) {
+        [channel invokeMethod:@"onState" arguments:@{@"type": @"abortLoad", @"url": webView.URL.absoluteString}];
         [self.webview stopLoading];
     }
 }
@@ -390,6 +391,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     if([navigationAction.request.URL.absoluteString containsString:@"attachments"]){
             isInvalid=true;
         }
+        if (navigationAction.navigationType == WKNavigationTypeBackForward) {}
     id data = @{@"url": navigationAction.request.URL.absoluteString,
                 @"type": isInvalid ? @"abortLoad" : @"shouldStart",
                 @"navigationType": [NSNumber numberWithInteger:navigationAction.navigationType]};
