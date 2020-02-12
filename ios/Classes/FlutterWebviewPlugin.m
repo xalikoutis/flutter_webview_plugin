@@ -391,6 +391,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
                 @"type": isInvalid ? @"abortLoad" : @"shouldStart",
                 @"navigationType": [NSNumber numberWithInteger:navigationAction.navigationType]};
     [channel invokeMethod:@"onState" arguments:data];
+
     if([navigationAction.request.URL.absoluteString containsString:@"attachments"]){
         decisionHandler(WKNavigationActionPolicyCancel);
     }
