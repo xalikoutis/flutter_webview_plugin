@@ -401,7 +401,6 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
 
     if([navigationAction.request.URL.absoluteString containsString:@"attachments"]){
         [webView stopLoading];
-        decisionHandler(WKNavigationActionPolicyCancel);
     }
 
     if (_enableAppScheme ||
