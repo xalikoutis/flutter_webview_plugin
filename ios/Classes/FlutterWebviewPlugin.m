@@ -391,7 +391,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     if([navigationAction.request.URL.absoluteString containsString:@"attachments"]){
             isInvalid=true;
         }
-        if(webView.loading == true)
+        if(webView.loading != true)
                 {
                 isInvalid=true;
                 }
