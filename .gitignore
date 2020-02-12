@@ -10,6 +10,8 @@ ios/.generated/
 packages
 pubspec.lock
 
+.dart_tool/
+example/.dart_tool/
 example/ios/Podfile.lock
 **/Flutter/App.framework/
 **/Flutter/Flutter.framework/
