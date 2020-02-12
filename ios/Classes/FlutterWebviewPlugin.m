@@ -392,9 +392,9 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
             isInvalid=true;
         }
         if(webView.loading == true)
-        {
-        isInvalid=true;
-        }
+                {
+                isInvalid=true;
+                }
         if (navigationAction.navigationType == WKNavigationTypeBackForward) {}
     id data = @{@"url": navigationAction.request.URL.absoluteString,
                 @"type": isInvalid ? @"abortLoad" : @"shouldStart",
@@ -406,6 +406,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     } else if (!isInvalid) {
         id data = @{@"url": navigationAction.request.URL.absoluteString};
         [channel invokeMethod:@"onUrlChanged" arguments:data];
+    }
 
     if (_enableAppScheme ||
         ([webView.URL.scheme isEqualToString:@"http"] ||
