@@ -7,6 +7,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
 @interface FlutterWebviewPlugin() <WKNavigationDelegate, UIScrollViewDelegate, WKUIDelegate> {
     BOOL _enableAppScheme;
     BOOL _enableZoom;
+    BOOL _abortNavigation;
     NSString* _invalidUrlRegex;
     NSMutableSet* _javaScriptChannelNames;
     NSNumber*  _ignoreSSLErrors;
@@ -154,6 +155,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     }
 
     _enableZoom = [withZoom boolValue];
+    _abortNavigation = false;
 
     UIViewController* presentedViewController = self.viewController.presentedViewController;
     UIViewController* currentViewController = presentedViewController != nil ? presentedViewController : self.viewController;
@@ -335,8 +337,8 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
 }
 - (void)stopLoading {
     if (self.webview != nil) {
-        [channel invokeMethod:@"onState" arguments:@{@"type": @"abortLoad", @"url": self.webview.URL.absoluteString}];
         [self.webview stopLoading];
+        _abortNavigation = true;
     }
 }
 - (void)back {
@@ -391,9 +393,10 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     if([navigationAction.request.URL.absoluteString containsString:@"attachments"]){
             isInvalid=true;
         }
-        if(webView.loading != true)
+        if(_abortNavigation == true)
                 {
                 isInvalid=true;
+                _abortNavigation = false;
                 }
         if (navigationAction.navigationType == WKNavigationTypeBackForward) {}
     id data = @{@"url": navigationAction.request.URL.absoluteString,
