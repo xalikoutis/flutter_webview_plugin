@@ -337,8 +337,8 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
 }
 - (void)stopLoading {
     if (self.webview != nil) {
-        [self.webview stopLoading];
         _abortNavigation = true;
+        [self.webview stopLoading];
     }
 }
 - (void)back {
