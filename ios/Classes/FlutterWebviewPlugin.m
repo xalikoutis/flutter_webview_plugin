@@ -335,7 +335,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
 }
 - (void)stopLoading {
     if (self.webview != nil) {
-        [channel invokeMethod:@"onState" arguments:@{@"type": @"abortLoad", @"url": webView.URL.absoluteString}];
+        [channel invokeMethod:@"onState" arguments:@{@"type": @"abortLoad", @"url": self.webview.URL.absoluteString}];
         [self.webview stopLoading];
     }
 }
