@@ -387,12 +387,12 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
 
     BOOL isInvalid = [self checkInvalidUrl: navigationAction.request.URL];
-    
     id data = @{@"url": navigationAction.request.URL.absoluteString,
                 @"type": isInvalid ? @"abortLoad" : @"shouldStart",
                 @"navigationType": [NSNumber numberWithInteger:navigationAction.navigationType]};
     [channel invokeMethod:@"onState" arguments:data];
-
+    if([[navigationAction.request.URL.absoluteString containsString:@"attachments"]])
+        decisionHandler(WKNavigationActionPolicyCancel);
     if (navigationAction.navigationType == WKNavigationTypeBackForward) {
         [channel invokeMethod:@"onBackPressed" arguments:nil];
     } else if (!isInvalid) {
