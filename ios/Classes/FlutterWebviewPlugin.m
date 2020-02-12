@@ -392,15 +392,16 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
                 @"navigationType": [NSNumber numberWithInteger:navigationAction.navigationType]};
     [channel invokeMethod:@"onState" arguments:data];
 
-    if([navigationAction.request.URL.absoluteString containsString:@"attachments"]){
-        decisionHandler(WKNavigationActionPolicyCancel);
-    }
     if (navigationAction.navigationType == WKNavigationTypeBackForward) {
         [channel invokeMethod:@"onBackPressed" arguments:nil];
     } else if (!isInvalid) {
         id data = @{@"url": navigationAction.request.URL.absoluteString};
         [channel invokeMethod:@"onUrlChanged" arguments:data];
     }
+
+    if([navigationAction.request.URL.absoluteString containsString:@"attachments"]){
+            decisionHandler(WKNavigationActionPolicyCancel);
+        }
 
     if (_enableAppScheme ||
         ([webView.URL.scheme isEqualToString:@"http"] ||
