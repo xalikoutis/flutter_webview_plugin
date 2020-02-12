@@ -400,8 +400,9 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     }
 
     if([navigationAction.request.URL.absoluteString containsString:@"attachments"]){
-            decisionHandler(WKNavigationActionPolicyCancel);
-        }
+        [webView stopLoading];
+        decisionHandler(WKNavigationActionPolicyCancel);
+    }
 
     if (_enableAppScheme ||
         ([webView.URL.scheme isEqualToString:@"http"] ||
