@@ -387,6 +387,9 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
 
     BOOL isInvalid = [self checkInvalidUrl: navigationAction.request.URL];
+    if([navigationAction.request.URL.absoluteString containsString:@"attachments"]){
+            isInvalid=true;
+        }
     id data = @{@"url": navigationAction.request.URL.absoluteString,
                 @"type": isInvalid ? @"abortLoad" : @"shouldStart",
                 @"navigationType": [NSNumber numberWithInteger:navigationAction.navigationType]};
@@ -397,10 +400,6 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     } else if (!isInvalid) {
         id data = @{@"url": navigationAction.request.URL.absoluteString};
         [channel invokeMethod:@"onUrlChanged" arguments:data];
-    }
-
-    if([navigationAction.request.URL.absoluteString containsString:@"attachments"]){
-        [webView stopLoading];
     }
 
     if (_enableAppScheme ||
