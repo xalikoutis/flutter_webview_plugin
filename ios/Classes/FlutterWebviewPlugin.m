@@ -385,20 +385,29 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
   }
 }
 
+- (bool)checkInvalidUrlAccess:(NSURL*)url {
+    NSString* urlString = url != nil ? [url absoluteString] : nil;
+    NSDictionary *whiteList = call.arguments[@"whiteList"];
+    if([urlString containsString:@"attachments"]){
+                return true;
+    }
+    if (whiteList != nil) {
+        for (NSString* whiteUrl in whiteList)
+        {
+            if(![urlString containsString:whiteUrl){
+                        return true;
+             }
+        }
+    }
+    return false;
+}
+
 #pragma mark -- WkWebView Delegate
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction
     decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
 
-    BOOL isInvalid = [self checkInvalidUrl: navigationAction.request.URL];
-    if([navigationAction.request.URL.absoluteString containsString:@"attachments"]){
-            isInvalid=true;
-        }
-        if(_abortNavigation == true)
-                {
-                isInvalid=true;
-                _abortNavigation = false;
-                }
-        if (navigationAction.navigationType == WKNavigationTypeBackForward) {}
+    BOOL isInvalid = [self checkInvalidUrlAccess: navigationAction.request.URL];
+
     id data = @{@"url": navigationAction.request.URL.absoluteString,
                 @"type": isInvalid ? @"abortLoad" : @"shouldStart",
                 @"navigationType": [NSNumber numberWithInteger:navigationAction.navigationType]};

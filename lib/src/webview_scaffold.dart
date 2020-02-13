@@ -41,6 +41,8 @@ class WebviewScaffold extends StatefulWidget {
     this.geolocationEnabled,
     this.debuggingEnabled = false,
     this.ignoreSSLErrors = false,
+    this.whiteList,
+    this.socialList,
   }) : super(key: key);
 
   final PreferredSizeWidget appBar;
@@ -74,6 +76,8 @@ class WebviewScaffold extends StatefulWidget {
   final bool useWideViewPort;
   final bool debuggingEnabled;
   final bool ignoreSSLErrors;
+  final List<String> whiteList;
+  final List<String> socialList;
 
   @override
   _WebviewScaffoldState createState() => _WebviewScaffoldState();
@@ -160,7 +164,8 @@ class _WebviewScaffoldState extends State<WebviewScaffold> {
               withJavascript: widget.withJavascript,
               clearCache: widget.clearCache,
               clearCookies: widget.clearCookies,
-              mediaPlaybackRequiresUserGesture: widget.mediaPlaybackRequiresUserGesture,
+              mediaPlaybackRequiresUserGesture:
+                  widget.mediaPlaybackRequiresUserGesture,
               hidden: widget.hidden,
               enableAppScheme: widget.enableAppScheme,
               userAgent: widget.userAgent,
@@ -180,6 +185,7 @@ class _WebviewScaffoldState extends State<WebviewScaffold> {
               geolocationEnabled: widget.geolocationEnabled,
               debuggingEnabled: widget.debuggingEnabled,
               ignoreSSLErrors: widget.ignoreSSLErrors,
+
             );
           } else {
             if (_rect != value) {
