@@ -403,7 +403,8 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     if (_whiteList != nil) {
         for (NSString *whiteUrl in _whiteList)
         {
-            if(![urlString containsString:whiteUrl]){
+            if([urlString rangeOfString:whiteUrl].location == NSNotFound){
+                NSLog(@"Not found");
                 return true;
             }
         }
