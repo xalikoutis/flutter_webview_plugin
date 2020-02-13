@@ -407,7 +407,13 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
                 NSLog(@"Not found");
                 return true;
             }
+            else{
+                NSLog(@"url found");
+                }
         }
+    }
+    else{
+    NSLog(@"list null");
     }
     return false;
 }
