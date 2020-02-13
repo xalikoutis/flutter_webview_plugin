@@ -397,9 +397,13 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
         return true;
     }
     if([urlString containsString:@"signout"])
-                    {
-                        return true;
-                    }
+    {
+        return true;
+    }
+    if([urlString containsString:@"mailto:"])
+    {
+        return true;
+    }
 
     if (_whiteList != nil) {
         for (NSString *whiteUrl in _whiteList)
