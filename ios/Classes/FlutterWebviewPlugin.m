@@ -404,9 +404,9 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     if (_whiteList != nil) {
         for (NSString *whiteUrl in _whiteList)
         {
-            if(![urlString containsString:whiteUrl]){
+            if([urlString containsString:whiteUrl]){
                 NSLog(@"Not found");
-                return true;
+                return false;
             }
             else{
                 NSLog(@"url found");
@@ -414,7 +414,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
         }
     }
 
-    return false;
+    return true;
 }
 
 #pragma mark -- WkWebView Delegate
