@@ -11,6 +11,8 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     NSString* _invalidUrlRegex;
     NSMutableSet* _javaScriptChannelNames;
     NSNumber*  _ignoreSSLErrors;
+    NSArray*   _whiteList;
+    NSArray*   _socialList;
 }
 @end
 
@@ -98,6 +100,8 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     _invalidUrlRegex = call.arguments[@"invalidUrlRegex"];
     _ignoreSSLErrors = call.arguments[@"ignoreSSLErrors"];
     _javaScriptChannelNames = [[NSMutableSet alloc] init];
+    _whiteList = call.arguments[@"whiteList"];
+    _socialList = call.arguments[@"socialList"];
     
     WKUserContentController* userContentController = [[WKUserContentController alloc] init];
     if ([call.arguments[@"javascriptChannelNames"] isKindOfClass:[NSArray class]]) {
@@ -387,14 +391,15 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
 
 - (bool)checkInvalidUrlAccess:(NSURL*)url {
     NSString* urlString = url != nil ? [url absoluteString] : nil;
-    NSDictionary *whiteList = call.arguments[@"whiteList"];
-    if([urlString containsString:@"attachments"]){
+
+    if([urlString containsString:@"attachments"])
+    {
                 return true;
     }
-    if (whiteList != nil) {
-        for (NSString* whiteUrl in whiteList)
+    if (_whiteList != nil) {
+        for (NSString* whiteUrl in _whiteList)
         {
-            if(![urlString containsString:whiteUrl){
+            if(![urlString containsString:whiteUrl]){
                         return true;
              }
         }
