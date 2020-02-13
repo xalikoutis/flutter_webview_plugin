@@ -396,15 +396,15 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     {
         return true;
     }
+    if([urlString containsString:@"signout"])
+                    {
+                        return true;
+                    }
 
-    //if (_whiteList != nil) {
+    if (_whiteList != nil) {
         for (NSString *whiteUrl in _whiteList)
         {
-        if([urlString containsString:@"signout"])
-                {
-                    return true;
-                }
-            if([host rangeOfString:@"mob7.learnworlds.com"].location != NSNotFound){
+            if([urlString rangeOfString:whiteUrl].location == NSNotFound){
                 NSLog(@"Not found");
                 return true;
             }
@@ -412,7 +412,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
                 NSLog(@"url found");
                 }
         }
-   // }
+    }
 
     return false;
 }
