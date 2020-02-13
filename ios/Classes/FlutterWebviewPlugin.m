@@ -403,7 +403,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     //if (_whiteList != nil) {
         for (NSString *whiteUrl in _whiteList)
         {
-            if([urlString rangeOfString:@"mob7.learnworlds.com"].location == NSNotFound){
+            if([urlString rangeOfString:@"mob7.learnworlds.com"].location != NSNotFound){
                 NSLog(@"Not found");
                 return true;
             }
