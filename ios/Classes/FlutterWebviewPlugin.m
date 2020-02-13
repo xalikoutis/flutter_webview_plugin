@@ -391,7 +391,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
 
 - (bool)checkInvalidUrlAccess:(NSURL*)url {
     NSString* urlString = url != nil ? [url absoluteString] : nil;
-
+    NSString* host = url != nil ? [url host] : nil;
     if([urlString containsString:@"attachments"])
     {
         return true;
@@ -403,7 +403,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     //if (_whiteList != nil) {
         for (NSString *whiteUrl in _whiteList)
         {
-            if([urlString rangeOfString:@"mob7.learnworlds.com"].location != NSNotFound){
+            if([host rangeOfString:@"mob7.learnworlds.com"].location != NSNotFound){
                 NSLog(@"Not found");
                 return true;
             }
