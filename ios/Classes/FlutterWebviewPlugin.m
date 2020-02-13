@@ -418,6 +418,19 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
         }
     }
 
+    if (_socialList != nil) {
+            for (NSString *socialUrl in _socialList)
+            {
+                if([urlString containsString:socialUrl]){
+                    NSLog(@"Not found");
+                    return false;
+                }
+                else{
+                    NSLog(@"url found");
+                    }
+            }
+        }
+
     return true;
 }
 
