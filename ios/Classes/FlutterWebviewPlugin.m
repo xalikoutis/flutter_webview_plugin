@@ -400,7 +400,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
         {
             return true;
         }
-    if (_whiteList != nil) {
+    //if (_whiteList != nil) {
         for (NSString *whiteUrl in _whiteList)
         {
             if([urlString rangeOfString:whiteUrl].location == NSNotFound){
@@ -411,7 +411,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
                 NSLog(@"url found");
                 }
         }
-    }
+   // }
     else{
     NSLog(@"list null");
     }
