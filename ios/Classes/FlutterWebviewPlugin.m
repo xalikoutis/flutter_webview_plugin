@@ -11,8 +11,8 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     NSString* _invalidUrlRegex;
     NSMutableSet* _javaScriptChannelNames;
     NSNumber*  _ignoreSSLErrors;
-    NSArray*   _whiteList;
-    NSArray*   _socialList;
+    NSArray   *_whiteList;
+    NSArray   *_socialList;
 }
 @end
 
@@ -394,14 +394,18 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
 
     if([urlString containsString:@"attachments"])
     {
-                return true;
+        return true;
     }
+    if([urlString containsString:@"signout"])
+        {
+            return true;
+        }
     if (_whiteList != nil) {
-        for (NSString* whiteUrl in _whiteList)
+        for (NSString *whiteUrl in _whiteList)
         {
             if(![urlString containsString:whiteUrl]){
-                        return true;
-             }
+                return true;
+            }
         }
     }
     return false;
