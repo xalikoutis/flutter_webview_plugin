@@ -412,9 +412,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
                 }
         }
    // }
-    else{
-    NSLog(@"list null");
-    }
+
     return false;
 }
 
