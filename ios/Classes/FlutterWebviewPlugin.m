@@ -467,7 +467,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
                                                                       : WKNavigationActionPolicyCancel);
                             }];
 
-    if (_enableAppScheme ||
+    /*if (_enableAppScheme ||
         ([webView.URL.scheme isEqualToString:@"http"] ||
          [webView.URL.scheme isEqualToString:@"https"] ||
          [webView.URL.scheme isEqualToString:@"about"] ||
@@ -479,7 +479,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
          }
     } else {
         decisionHandler(WKNavigationActionPolicyCancel);
-    }
+    }*/
 }
 
 - (WKWebView *)webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
