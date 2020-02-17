@@ -14,6 +14,8 @@ enum WebViewState { shouldStart, startLoad, finishLoad, abortLoad }
 
 // TODO: use an id by webview to be able to manage multiple webview
 
+typedef FutureOr<bool> NavigationDelegate(String url);
+
 /// Singleton class that communicate with a Webview Instance
 class FlutterWebviewPlugin {
   factory FlutterWebviewPlugin() {
@@ -32,6 +34,7 @@ class FlutterWebviewPlugin {
   static FlutterWebviewPlugin _instance;
 
   final MethodChannel _channel;
+  NavigationDelegate navigationDelegate;
 
   final _onBack = StreamController<Null>.broadcast();
   final _onDestroy = StreamController<Null>.broadcast();
@@ -39,7 +42,8 @@ class FlutterWebviewPlugin {
   final _onStateChanged = StreamController<WebViewStateChanged>.broadcast();
   final _onScrollXChanged = StreamController<double>.broadcast();
   final _onScrollYChanged = StreamController<double>.broadcast();
-  final _onProgressChanged = new StreamController<double>.broadcast();
+  final _onProgressChanged = StreamController<double>.broadcast();
+  final _onNavigationChanged = StreamController<String>.broadcast();
   final _onHttpError = StreamController<WebViewHttpError>.broadcast();
   final _onPostMessage = StreamController<JavascriptMessage>.broadcast();
 
@@ -48,42 +52,48 @@ class FlutterWebviewPlugin {
       // ignore: prefer_collection_literals
       Map<String, JavascriptChannel>();
 
-  Future<Null> _handleMessages(MethodCall call) async {
+  Future<bool> _handleMessages(MethodCall call) async {
     switch (call.method) {
       case 'onBack':
         _onBack.add(null);
-        break;
+        return null;
       case 'onDestroy':
         _onDestroy.add(null);
-        break;
+        return null;
       case 'onUrlChanged':
         _onUrlChanged.add(call.arguments['url']);
-        break;
+        return null;
       case 'onScrollXChanged':
         _onScrollXChanged.add(call.arguments['xDirection']);
-        break;
+        return null;
       case 'onScrollYChanged':
         _onScrollYChanged.add(call.arguments['yDirection']);
-        break;
+        return null;
       case 'onProgressChanged':
         _onProgressChanged.add(call.arguments['progress']);
-        break;
+        return null;
+      case 'onNavigationChanged':
+        //_onNavigationChanged.add(call.arguments['url']);
+        if (navigationDelegate == null) return true;
+        final navigate = await navigationDelegate(call.arguments['url']);
+        return navigate;
       case 'onState':
         _onStateChanged.add(
           WebViewStateChanged.fromMap(
             Map<String, dynamic>.from(call.arguments),
           ),
         );
-        break;
+        return null;
       case 'onHttpError':
         _onHttpError.add(
             WebViewHttpError(call.arguments['code'], call.arguments['url']));
-        break;
+        return null;
       case 'javascriptChannelMessage':
         _handleJavascriptChannelMessage(
             call.arguments['channel'], call.arguments['message']);
-        break;
+        return null;
     }
+    return null;
   }
 
   /// Listening the OnDestroy LifeCycle Event for Android

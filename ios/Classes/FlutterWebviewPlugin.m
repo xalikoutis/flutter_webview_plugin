@@ -451,6 +451,20 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
         id data = @{@"url": navigationAction.request.URL.absoluteString};
         [channel invokeMethod:@"onUrlChanged" arguments:data];
     }
+    [_methodChannel invokeMethod:@"onNavigationChanged"
+                         arguments:arguments
+                            result:^(id _Nullable result) {
+                              if (![result isKindOfClass:[NSNumber class]]) {
+                                NSLog(@"navigationRequest unexpectedly returned a non boolean value: "
+                                      @"%@, allowing navigation.",
+                                      result);
+                                decisionHandler(WKNavigationActionPolicyAllow);
+                                return;
+                              }
+                              NSNumber* typedResult = result;
+                              decisionHandler([typedResult boolValue] ? WKNavigationActionPolicyAllow
+                                                                      : WKNavigationActionPolicyCancel);
+                            }];
 
     if (_enableAppScheme ||
         ([webView.URL.scheme isEqualToString:@"http"] ||

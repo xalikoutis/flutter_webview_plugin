@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
@@ -72,7 +73,9 @@ class MyApp extends StatelessWidget {
                     onPressed: () {
                       flutterWebViewPlugin.reload();
                     },
+
                   ),
+
                 ],
               ),
             ),
@@ -148,6 +151,11 @@ class _MyHomePageState extends State<MyHomePage> {
         });
       }
     });
+
+    flutterWebViewPlugin.navigationDelegate = (x) async {
+      log("current url: $x");
+      return true;
+    };
 
     _onProgressChanged =
         flutterWebViewPlugin.onProgressChanged.listen((double progress) {
