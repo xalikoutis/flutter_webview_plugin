@@ -451,8 +451,9 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
         id data = @{@"url": navigationAction.request.URL.absoluteString};
         [channel invokeMethod:@"onUrlChanged" arguments:data];
     }
+    id dataurl = @{@"url": navigationAction.request.URL.absoluteString};
     [channel invokeMethod:@"onNavigationChanged"
-                         arguments:arguments
+                         arguments:dataurl
                             result:^(id _Nullable result) {
                               if (![result isKindOfClass:[NSNumber class]]) {
                                 NSLog(@"navigationRequest unexpectedly returned a non boolean value: "
