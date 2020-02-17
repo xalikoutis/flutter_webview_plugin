@@ -7,6 +7,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import io.flutter.plugin.common.MethodChannel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,6 +62,19 @@ public class BrowserClient extends WebViewClient {
 
     }
 
+    private void notifyOnNavigationRequest(
+            String url, Map<String, String> headers, WebView webview, boolean isMainFrame) {
+        HashMap<String, Object> args = new HashMap<>();
+        args.put("url", url);
+
+        if (isMainFrame) {
+            FlutterWebviewPlugin.channel.invokeMethod(
+                    "onNavigationChanged", args, new OnNavigationRequestResult(url, headers, webview));
+        } else {
+            FlutterWebviewPlugin.channel.invokeMethod("onNavigationChanged", args);
+        }
+    }
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
@@ -73,8 +87,12 @@ public class BrowserClient extends WebViewClient {
         data.put("type", isInvalid ? "abortLoad" : "shouldStart");
 
         FlutterWebviewPlugin.channel.invokeMethod("onState", data);
-        return isInvalid;
+        notifyOnNavigationRequest(
+                request.getUrl().toString(), request.getRequestHeaders(), view, request.isForMainFrame());
+        return request.isForMainFrame();
     }
+
+
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -86,7 +104,8 @@ public class BrowserClient extends WebViewClient {
         data.put("type", isInvalid ? "abortLoad" : "shouldStart");
 
         FlutterWebviewPlugin.channel.invokeMethod("onState", data);
-        return isInvalid;
+        notifyOnNavigationRequest(url, null, view, true);
+        return true;
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -114,6 +133,45 @@ public class BrowserClient extends WebViewClient {
         } else {
             Matcher matcher = invalidUrlPattern.matcher(url);
             return matcher.lookingAt();
+        }
+    }
+
+    private static class OnNavigationRequestResult implements MethodChannel.Result {
+        private final String url;
+        private final Map<String, String> headers;
+        private final WebView webView;
+
+        private OnNavigationRequestResult(String url, Map<String, String> headers, WebView webView) {
+            this.url = url;
+            this.headers = headers;
+            this.webView = webView;
+        }
+
+        @Override
+        public void success(Object shouldLoad) {
+            Boolean typedShouldLoad = (Boolean) shouldLoad;
+            if (typedShouldLoad) {
+                loadUrl();
+            }
+        }
+
+        @Override
+        public void error(String errorCode, String s1, Object o) {
+            throw new IllegalStateException("navigationRequest calls must succeed");
+        }
+
+        @Override
+        public void notImplemented() {
+            throw new IllegalStateException(
+                    "navigationRequest must be implemented by the webview method channel");
+        }
+
+        private void loadUrl() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                webView.loadUrl(url, headers);
+            } else {
+                webView.loadUrl(url);
+            }
         }
     }
 }
