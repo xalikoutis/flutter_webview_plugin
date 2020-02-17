@@ -451,7 +451,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
         id data = @{@"url": navigationAction.request.URL.absoluteString};
         [channel invokeMethod:@"onUrlChanged" arguments:data];
     }
-    [_methodChannel invokeMethod:@"onNavigationChanged"
+    [channel invokeMethod:@"onNavigationChanged"
                          arguments:arguments
                             result:^(id _Nullable result) {
                               if (![result isKindOfClass:[NSNumber class]]) {
