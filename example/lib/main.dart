@@ -153,6 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     flutterWebViewPlugin.navigationDelegate = (x) async {
+
       log("current url: $x");
       return true;
     };
