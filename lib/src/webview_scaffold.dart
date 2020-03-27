@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -97,12 +98,14 @@ class _WebviewScaffoldState extends State<WebviewScaffold> {
     webviewReference.close();
 
     _onBack = webviewReference.onBack.listen((_) async {
+      log(_topMostRoute.toString());
       if (!mounted) {
         return;
       }
 
       // The willPop/pop pair here is equivalent to Navigator.maybePop(),
       // which is what's called from the flutter back button handler.
+
       final pop = await _topMostRoute.willPop();
       if (pop == RoutePopDisposition.pop) {
         // Close the webview if it's on the route at the top of the stack.

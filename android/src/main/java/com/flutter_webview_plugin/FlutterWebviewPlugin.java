@@ -20,6 +20,7 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.PluginRegistry;
+import io.flutter.app.FlutterActivityEvents;
 
 /**
  * FlutterWebviewPlugin
@@ -141,6 +142,7 @@ public class FlutterWebviewPlugin implements MethodCallHandler, PluginRegistry.A
         FrameLayout.LayoutParams params = buildLayoutParams(call);
 
         activity.addContentView(webViewManager.webView, params);
+
 
         webViewManager.openUrl(withJavascript,
                 clearCache,
@@ -324,4 +326,28 @@ public class FlutterWebviewPlugin implements MethodCallHandler, PluginRegistry.A
         }
         return false;
     }
+
+   /* @Override
+    public void onBackPressed()
+    {
+        // Notify the VideoEnabledWebChromeClient, and handle it ourselves if it doesn't handle it
+        if (!webViewManager.onBackPressed())
+        {
+            if (webViewManager.canGoBack())
+            {
+                webViewManager.goBack();
+            }
+            else
+            {
+                // Close app (presumably)
+                super.onBackPressed();
+            }
+        }
+    }
+
+    @Override
+    public void onUserLeaveHint() {
+
+    }*/
+
 }

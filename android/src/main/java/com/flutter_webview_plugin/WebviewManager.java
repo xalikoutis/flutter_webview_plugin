@@ -121,17 +121,27 @@ class WebviewManager {
     private final Handler platformThreadHandler;
     boolean closed = false;
     WebView webView;
+    WebChromeClient webChromeClient;
     Activity activity;
     BrowserClient webViewClient;
     ResultHandler resultHandler;
     Context context;
     private boolean ignoreSSLErrors = false;
+    private View customView;
+    private boolean isVideoFullscreen;
+
+    public boolean isVideoFullscreen()
+    {
+        return isVideoFullscreen;
+    }
+
 
     WebviewManager(final Activity activity, final Context context, final List<String> channelNames) {
         this.webView = new ObservableWebView(activity);
         this.activity = activity;
         this.context = context;
         this.resultHandler = new ResultHandler();
+        this.isVideoFullscreen = false;
         this.platformThreadHandler = new Handler(context.getMainLooper());
         webViewClient = new BrowserClient() {
             @Override
@@ -174,7 +184,7 @@ class WebviewManager {
         });
 
         webView.setWebViewClient(webViewClient);
-        webView.setWebChromeClient(new WebChromeClient() {
+        webChromeClient = new WebChromeClient() {
             //The undocumented magic method override
             //Eclipse will swear at you if you try to put @Override here
             // For Android 3.0+
@@ -265,10 +275,7 @@ class WebviewManager {
                 callback.invoke(origin, true, false);
             }
             // Allow switching to fullscreen e.g when playing a video
-
-            private View customView;
-            private CustomViewCallback customViewCallback;
-
+            /*private CustomViewCallback customViewCallback;
             @Override
             public void onShowCustomView(View view, int requestedOrientation, CustomViewCallback callback) {
                 onShowCustomView(view, callback);
@@ -283,6 +290,7 @@ class WebviewManager {
                 }
 
                 // add custom view to container and save reference
+                isVideoFullscreen = true;
                 customView = view;
                 customViewCallback = callback;
 
@@ -304,15 +312,18 @@ class WebviewManager {
                 // Hide the custom view and show Webview
                 FrameLayout rootView = (FrameLayout)webView.getRootView();
                 FrameLayout contentView = (FrameLayout)rootView.findViewById(android.R.id.content);
-                contentView.setVisibility(View.VISIBLE);
-                customView.setVisibility(View.GONE);
 
-                // Remove the custom view from its container and clear reference
+                customView.setVisibility(View.GONE);
                 rootView.removeView(customView);
                 customViewCallback.onCustomViewHidden();
                 customView = null;
-            }
-        });
+                isVideoFullscreen = false;
+
+                contentView.setVisibility(View.VISIBLE);
+                contentView.requestFocus();
+            }*/
+        };
+        webView.setWebChromeClient(webChromeClient);
         registerJavaScriptChannelNames(channelNames);
     }
 
@@ -600,6 +611,19 @@ class WebviewManager {
     void stopLoading(MethodCall call, MethodChannel.Result result) {
         if (webView != null) {
             webView.stopLoading();
+        }
+    }
+
+    public boolean onBackPressed()
+    {
+        if (isVideoFullscreen)
+        {
+            webChromeClient.onHideCustomView();
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }
